@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADONIS | Premium Fitness Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-theme="light">
+
+    <div id="login-screen" class="screen active" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; display: flex; justify-content: center; align-items: center;">
+        
+        <button class="btn-icon" onclick="toggleTheme()" title="Alternar Tema" style="position: absolute; top: 20px; right: 20px; z-index: 20; background: var(--bg-surface); box-shadow: var(--shadow);">
+            <i id="login-theme-icon" class="fas fa-moon"></i>
+        </button>
+
+        <div class="card glass-panel" style="position: relative; z-index: 10; width: 100%; max-width: 400px; text-align: center; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+            
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <img src="AdonisLogo.png" alt="ADONIS" class="logo-dynamic" style="height: 50px; object-fit: contain;">
+            </div>
+            
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Faça login ou crie sua conta</p>
+            
+            <form id="auth-form" onsubmit="handleAuth(event)" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="email" id="auth-email" placeholder="E-mail" required class="form-input" style="padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-size: 1rem; outline: none;">
+                
+                <input type="password" id="auth-password" placeholder="Senha" required class="form-input" style="padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-size: 1rem; outline: none;">
+                
+                <select id="auth-role" required class="form-input" style="padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-size: 1rem; outline: none;">
+                    <option value="" disabled selected>Selecione seu perfil...</option>
+                    <option value="personal">Sou Personal Trainer</option>
+                    <option value="aluno">Sou Aluno</option>
+                </select>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="submit" class="btn-primary" style="flex: 1; padding: 14px;">Entrar</button>
+                    <button type="button" class="btn-outline" style="flex: 1; padding: 14px; color: var(--text-main); border-color: var(--border);" onclick="simulateRegister()">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <main id="app-shell" class="hidden">
+        <aside id="sidebar">
+            <div class="sidebar-top">
+                <div class="logo-area" style="display: flex; align-items: center; padding: 10px 0;">
+                    <img src="AdonisLogo.png" alt="ADONIS" class="logo-dynamic" style="height: 35px; object-fit: contain;">
+                </div>
+                <nav id="menu-nav"></nav>
+            </div>
+            
+            <div class="sidebar-bottom">
+                <div class="user-profile-small">
+                    <div class="avatar" id="user-avatar-img"><i class="fas fa-user"></i></div>
+                    <div class="user-info-text">
+                        <span class="user-name" id="display-user-name">Usuário</span>
+                        <span class="user-status">Online</span>
+                    </div>
+                </div>
+                <button onclick="logout()" class="btn-icon" title="Sair"><i class="fas fa-power-off"></i></button>
+            </div>
+        </aside>
+
+        <section id="main-content">
+            <header id="app-header">
+                <div class="header-left">
+                    <h2 id="view-title">Dashboard</h2>
+                </div>
+                <div class="header-right" style="display: flex; gap: 15px; align-items: center;">
+                    <button class="btn-icon" onclick="toggleTheme()" title="Alternar Tema">
+                        <i id="theme-icon" class="fas fa-moon"></i>
+                    </button>
+                    
+                    <div style="position: relative;">
+                        <button class="btn-icon" onclick="toggleNotifications()" title="Notificações">
+                            <i class="far fa-bell"></i>
+                            <span id="notif-badge" class="notif-badge hidden">0</span>
+                        </button>
+                        <div id="notif-dropdown" class="notification-dropdown hidden">
+                            <div class="notif-header">
+                                <span>Notificações</span>
+                                <button onclick="clearNotifications()">Limpar</button>
+                            </div>
+                            <div id="notif-list" class="notif-body"></div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div id="scroll-area">
+                <div id="content-area"></div>
+                
+                <footer class="app-footer">
+                    <div class="footer-content">
+                        <div class="social-links">
+                            <a href="#" class="social-icon" onclick="showToast('Abrindo Instagram...')"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-icon" onclick="showToast('Abrindo Facebook...')"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-icon" onclick="showToast('Abrindo LinkedIn...')"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-icon" onclick="showToast('Abrindo WhatsApp...')"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                        <p class="copyright">&copy; 2026 <b>ADONIS.</b> High Performance Intelligence.</p>
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal-overlay" class="hidden" onclick="closeModalOutside(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modal-title">Título</h3>
+                <button class="btn-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
